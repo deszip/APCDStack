@@ -2,8 +2,8 @@
 language: objective-c
 # cache: cocoapods
 # podfile: Example/Podfile
-before_install: 
-- pwd
+#before_install: 
+#- echo pwd
 # - gem install cocoapods # Since Travis is not always on latest version
 # - pod install --project-directory=Example
 install:
@@ -11,5 +11,5 @@ install:
 script:
 #- set -o pipefail && xcodebuild test -workspace Example/APCDStack.xcworkspace -scheme APCDStack-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty -c
 - pod lib lint --quick
-- xctool test -workspace ../Example/APCDStack.xcworkspace -scheme APCDStack -sdk iphonesimulator
+- xctool test -workspace $TRAVIS_BUILD_DIR/Example/APCDStack.xcworkspace -scheme APCDStack -sdk iphonesimulator
   ONLY_ACTIVE_ARCH=NO
