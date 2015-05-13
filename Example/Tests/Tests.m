@@ -24,4 +24,9 @@
     [super tearDown];
 }
 
+- (void)testFoo
+{
+    XCTAssert(true, @"Foo failed!");
+}
+
 @end
