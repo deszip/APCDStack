@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "APCDStack"
-  s.version          = "0.1.0"
+  s.version          = "0.2.0"
   s.summary          = "CoreData stack done right."
   s.description      = <<-DESC
                        Simple class containing multithreaded CoreData stack.
