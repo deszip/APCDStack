@@ -1,9 +1,9 @@
 //
 //  APCDStore.swift
-//  APCDStoreExample
+//  APCDStore
 //
 //  Created by Deszip on 14/09/14.
-//  Copyright (c) 2014 Alterplay. All rights reserved.
+//  Copyright (c) 2014 - 2015 Alterplay. All rights reserved.
 //
 
 import Foundation
@@ -11,10 +11,17 @@ import CoreData
 
 public class APCDStore {
     
+    //MARK: Constants
+    
+    private let kAppBundleNameKey   = "CFBundleName"
+    private let kModelMOMExtension  = "mom"
+    private let kModelMOMDExtension = "momd"
+    
     //MARK: Settings
     
-    public var storeName: String = ""
-    public var storeType: String = NSSQLiteStoreType
+    public var storeName: String    = ""
+    public var storeType: String    = NSSQLiteStoreType
+    public var appGroupID: String   = ""
     
     //MARK: Model and coordinator
     
@@ -22,24 +29,23 @@ public class APCDStore {
         let momdPath = NSBundle.mainBundle().pathForResource(self.storeName, ofType: "momd")
         let momdURL = NSURL.fileURLWithPath(momdPath!)
         let mom = NSManagedObjectModel(contentsOfURL: momdURL!)
- 
+        
         return mom!
-    }()
+        }()
     
     private lazy var _psc: NSPersistentStoreCoordinator = {
         let storeOptions = [NSMigratePersistentStoresAutomaticallyOption : true,
-                            NSInferMappingModelAutomaticallyOption : true]
+            NSInferMappingModelAutomaticallyOption : true]
         
         let psc = NSPersistentStoreCoordinator(managedObjectModel: self._mom)
-        let psName = "\(self.storeName).sqlite"
-        let psURL = self.applicationDocumentsDirectory().URLByAppendingPathComponent(psName)
+        let psUrl = self.storeURL().URLByAppendingPathComponent("\(self.storeName).sqlite")
         var error: NSError?
-        if (psc.addPersistentStoreWithType(self.storeType, configuration: nil, URL: psURL, options: storeOptions, error: &error) == nil) {
+        if (psc.addPersistentStoreWithType(self.storeType, configuration: nil, URL: psUrl, options: storeOptions, error: &error) == nil) {
             println("Error initializing NSPersistentStoreCoordinator: \(error)")
         }
         
         return psc
-    }()
+        }()
     
     //MARK: Contexts
     
@@ -48,21 +54,21 @@ public class APCDStore {
         mainMOC.parentContext = self.writerMOC
         
         return mainMOC
-    }()
-
+        }()
+    
     lazy var workerMOC: NSManagedObjectContext = {
         let workerMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         workerMOC.parentContext = self.mainMOC
         
         return workerMOC
-    }()
+        }()
     
     lazy var writerMOC: NSManagedObjectContext = {
         let writerMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         writerMOC.persistentStoreCoordinator = self._psc
         
         return writerMOC
-    }()
+        }()
     
     private var spawnedContexts: Dictionary<String, NSManagedObjectContext> = Dictionary()
     
@@ -70,29 +76,25 @@ public class APCDStore {
     
     public class var defaultInstance: APCDStore {
         struct Singleton {
-            static let instance = APCDStore()
+            static let instance = APCDStore(storeType: "", storeName: "", appGroupID: "")
         }
-            
+        
         return Singleton.instance
     }
     
-    init() {
-        self.storeName = self.applicationDisplayName()
+    init(storeType: String, storeName: String, appGroupID: String) {
+        self.storeType = storeType;
+        self.storeName = storeName;
+        self.appGroupID = appGroupID;
     }
     
     convenience init(storeType: String) {
-        self.init()
-        self.storeType = storeType
+        self.init(storeType: storeType, storeName: "", appGroupID: "")
+        self.storeName = self.applicationName()
     }
     
     convenience init(storeType: String, storeName: String) {
-        self.init()
-        self.storeType = storeType
-        self.storeName = storeName
-    }
-    
-    deinit {
-        //...
+        self.init(storeType: storeType, storeName: storeName, appGroupID: "")
     }
     
     //MARK: Context management
@@ -131,16 +133,46 @@ public class APCDStore {
     
     //MARK: Tools
     
-    private func applicationDocumentsDirectory() -> NSURL {
-        let fileManager = NSFileManager.defaultManager()
-        let urls: Array<NSURL> = fileManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask) as! Array<NSURL>
+    private func modelURL() -> NSURL? {
+        let currentBundle = NSBundle(forClass: object_getClass(self))
+        if let modelPath = currentBundle.pathForResource(self.storeName, ofType:kModelMOMDExtension) {
+            return NSURL(fileURLWithPath: modelPath)
+        } else {
+            if let modelPath = currentBundle.pathForResource(self.storeName, ofType:kModelMOMExtension) {
+                return NSURL(fileURLWithPath: modelPath)
+            }
+        }
         
-        return urls.last!
+        return nil
     }
     
-    private func applicationDisplayName() -> String {
-        let name = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as! String
-
-        return name
+    private func storeURL() -> NSURL {
+        
+        #if os(iOS)
+            
+            if self.appGroupID.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) > 0 {
+                return NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier(self.appGroupID)!
+            }
+            
+            let urls = NSFileManager.defaultManager().URLsForDirectory(.LibraryDirectory, inDomains:.UserDomainMask)
+            return urls[0] as! NSURL
+            
+            #else
+            
+            let urls = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+            let supportUrl = urls[0] as! NSURL
+            let currentBundle = NSBundle(forClass: object_getClass(self))
+            let appUrl = supportUrl.URLByAppendingPathComponent(self.applicationName(), isDirectory: true)
+            if !NSFileManager.defaultManager().fileExistsAtPath(appUrl.path!) {
+            NSFileManager.defaultManager().createDirectoryAtURL(appUrl, withIntermediateDirectories: true, attributes: nil, error: nil)
+            }
+            
+            return appUrl
+            
+        #endif
+    }
+    
+    private func applicationName() -> String {
+        return NSBundle(forClass: object_getClass(self)).objectForInfoDictionaryKey(kAppBundleNameKey) as! String
     }
 }

@@ -3,7 +3,7 @@
 //  APCDStackTests
 //
 //  Created by Deszip on 05/12/2015.
-//  Copyright (c) 2014 Deszip. All rights reserved.
+//  Copyright (c) 2014 - 2015 Alterplay. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>
@@ -24,9 +24,9 @@
     [super tearDown];
 }
 
-- (void)testFoo
+- (void)testTravisGotSwiftSupport
 {
-    XCTAssert(true, @"Foo failed!");
+    XCTAssert(true, @"Still failing :(");
 }
 
 @end
