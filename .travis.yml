@@ -10,5 +10,5 @@ install:
 script:
 #- set -o pipefail && xcodebuild test -workspace Example/APCDStack.xcworkspace -scheme APCDStack-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty -c
 - pod lib lint --quick
-- xctool test -workspace APCDStack.xcworkspace -scheme APCDStack -sdk iphonesimulator
+- xctool test -workspace ./Example/APCDStack.xcworkspace -scheme APCDStack -sdk iphonesimulator
   ONLY_ACTIVE_ARCH=NO
