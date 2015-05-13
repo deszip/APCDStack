@@ -11,14 +11,11 @@ Pod::Spec.new do |s|
   s.source           = { :git => "https://github.com/Deszip/APCDStack.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '8.0'
-  s.osx.deployment_target = '10.8'
+  s.osx.deployment_target = '10.9'
 
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes/**/*'
-  s.resource_bundles = {
-    'APCDStack' => ['Pod/Assets/*.png']
-  }
 
   s.frameworks = 'CoreData'
 end
