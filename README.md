@@ -1,6 +1,6 @@
 # APCDStack
 
-[![CI Status](https://travis-ci.org/deszip/APCDStack.svg)](https://travis-ci.org/Deszip/APCDStack)
+[![CI Status](https://travis-ci.org/deszip/APCDStack.svg)](https://travis-ci.org/deszip/APCDStack)
 [![Version](https://img.shields.io/cocoapods/v/APCDStack.svg?style=flat)](http://cocoapods.org/pods/APCDStack)
 [![License](https://img.shields.io/cocoapods/l/APCDStack.svg?style=flat)](http://cocoapods.org/pods/APCDStack)
 [![Platform](https://img.shields.io/cocoapods/p/APCDStack.svg?style=flat)](http://cocoapods.org/pods/APCDStack)
