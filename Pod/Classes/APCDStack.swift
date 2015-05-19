@@ -63,20 +63,6 @@ public class APCDStack {
     
     //MARK: Contexts
     
-    lazy var mainMOC: NSManagedObjectContext = {
-        let mainMOC = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        mainMOC.parentContext = self.writerMOC
-        
-        return mainMOC
-        }()
-    
-    lazy var workerMOC: NSManagedObjectContext = {
-        let workerMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        workerMOC.parentContext = self.mainMOC
-        
-        return workerMOC
-        }()
-    
     lazy var writerMOC: NSManagedObjectContext = {
         let writerMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         writerMOC.persistentStoreCoordinator = self._psc
@@ -84,22 +70,25 @@ public class APCDStack {
         return writerMOC
         }()
     
-    private var spawnedContexts: Dictionary<String, NSManagedObjectContext> = Dictionary()
+    lazy var mainMOC: NSManagedObjectContext = {
+        let mainMOC = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        mainMOC.parentContext = self.writerMOC
+        
+        return mainMOC
+        }()
     
     //MARK: Initializers
     
-    public class var defaultInstance: APCDStack {
-        struct Singleton {
-            static let instance = APCDStack(storeType: "", storeName: "", appGroupID: "")
+    init(storeType: String, storeName: String = "", appGroupID: String = "") {
+        self.storeType = storeType;
+        
+        if storeName.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) == 0 {
+            self.storeName = self.applicationName()
+        } else {
+            self.storeName = storeName
         }
         
-        return Singleton.instance
-    }
-    
-    init(storeType: String, storeName: String, appGroupID: String) {
-        self.storeType = storeType;
-        self.storeName = storeName;
-        self.appGroupID = appGroupID;
+        self.appGroupID = appGroupID
     }
     
     convenience init(storeType: String) {
@@ -118,13 +107,8 @@ public class APCDStack {
     }
     
     public func spawnBackgroundContextWithName(name: String) -> NSManagedObjectContext {
-        if let context = spawnedContexts[name] {
-            return context
-        }
-        
         let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         context.parentContext = mainMOC
-        spawnedContexts[name] = context
         
         return context
     }
@@ -133,13 +117,13 @@ public class APCDStack {
         mainMOC.performBlock { () -> Void in
             var saveError: NSError?
             if !self.mainMOC.save(&saveError) {
-                println("APCDStore: error saving main context: \(saveError)")
+                println("APCDStack: error saving main context: \(saveError)")
             }
             
             self.writerMOC.performBlock({ () -> Void in
                 var saveError: NSError?
                 if !self.writerMOC.save(&saveError) {
-                    println("APCDStore: error saving writer context: \(saveError)")
+                    println("APCDStack: error saving writer context: \(saveError)")
                 }
             })
         }
