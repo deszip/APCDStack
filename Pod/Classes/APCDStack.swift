@@ -1,6 +1,6 @@
 //
-//  APCDStore.swift
-//  APCDStore
+//  APCDStack.swift
+//  APCDStack
 //
 //  Created by Deszip on 14/09/14.
 //  Copyright (c) 2014 - 2015 Alterplay. All rights reserved.
@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public class APCDStore {
+public class APCDStack {
     
     //MARK: Constants
     
@@ -25,26 +25,40 @@ public class APCDStore {
     
     //MARK: Model and coordinator
     
-    private lazy var _mom: NSManagedObjectModel = {
-        let momdPath = NSBundle.mainBundle().pathForResource(self.storeName, ofType: "momd")
-        let momdURL = NSURL.fileURLWithPath(momdPath!)
-        let mom = NSManagedObjectModel(contentsOfURL: momdURL!)
-        
-        return mom!
-        }()
-    
-    private lazy var _psc: NSPersistentStoreCoordinator = {
-        let storeOptions = [NSMigratePersistentStoresAutomaticallyOption : true,
-            NSInferMappingModelAutomaticallyOption : true]
-        
-        let psc = NSPersistentStoreCoordinator(managedObjectModel: self._mom)
-        let psUrl = self.storeURL().URLByAppendingPathComponent("\(self.storeName).sqlite")
-        var error: NSError?
-        if (psc.addPersistentStoreWithType(self.storeType, configuration: nil, URL: psUrl, options: storeOptions, error: &error) == nil) {
-            println("Error initializing NSPersistentStoreCoordinator: \(error)")
+    private lazy var _mom: NSManagedObjectModel? = {
+        if let modelUrl = self.modelURL() {
+            if let mom = NSManagedObjectModel(contentsOfURL: modelUrl) {
+                return mom
+            }
         }
         
-        return psc
+        let currentBundle = NSBundle(forClass: object_getClass(self))
+        if let mom = NSManagedObjectModel.mergedModelFromBundles([currentBundle]) {
+            return mom
+        }
+        
+        return nil
+    }()
+    
+    private lazy var _psc: NSPersistentStoreCoordinator? = {
+        let storeOptions = [NSMigratePersistentStoresAutomaticallyOption : true,
+                            NSInferMappingModelAutomaticallyOption : true]
+        
+        if let _ = self._mom {
+            let psc = NSPersistentStoreCoordinator(managedObjectModel: self._mom!)
+            let psUrl = self.storeURL().URLByAppendingPathComponent("\(self.storeName).sqlite")
+            var error: NSError?
+            if let _ = psc.addPersistentStoreWithType(self.storeType, configuration: nil, URL: psUrl, options: storeOptions, error: &error) {
+                return psc
+            } else {
+                NSException.raise("Failed to add store to coordinator:", format: "%@", arguments: getVaList([error!]))
+            }
+        } else {
+            NSException.raise("Can't find model!", format: "", arguments: getVaList([""]))
+        }
+        
+        return nil
+        
         }()
     
     //MARK: Contexts
@@ -74,9 +88,9 @@ public class APCDStore {
     
     //MARK: Initializers
     
-    public class var defaultInstance: APCDStore {
+    public class var defaultInstance: APCDStack {
         struct Singleton {
-            static let instance = APCDStore(storeType: "", storeName: "", appGroupID: "")
+            static let instance = APCDStack(storeType: "", storeName: "", appGroupID: "")
         }
         
         return Singleton.instance
@@ -137,10 +151,8 @@ public class APCDStore {
         let currentBundle = NSBundle(forClass: object_getClass(self))
         if let modelPath = currentBundle.pathForResource(self.storeName, ofType:kModelMOMDExtension) {
             return NSURL(fileURLWithPath: modelPath)
-        } else {
-            if let modelPath = currentBundle.pathForResource(self.storeName, ofType:kModelMOMExtension) {
-                return NSURL(fileURLWithPath: modelPath)
-            }
+        } else if let modelPath = currentBundle.pathForResource(self.storeName, ofType:kModelMOMExtension) {
+            return NSURL(fileURLWithPath: modelPath)
         }
         
         return nil
