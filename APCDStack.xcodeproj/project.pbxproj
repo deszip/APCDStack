@@ -8,8 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0E053D931B0C6BEA00183427 /* APCDStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E053D871B0C6BEA00183427 /* APCDStack.framework */; };
-		0E053D9A1B0C6BEA00183427 /* APCDStackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E053D991B0C6BEA00183427 /* APCDStackTests.swift */; };
 		0E5D22381B0C9F6C00C21A08 /* APCDStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5D22371B0C9F6C00C21A08 /* APCDStack.swift */; };
+		0E5D22401B0CA23300C21A08 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E5D223E1B0CA23300C21A08 /* Info.plist */; };
+		0E5D22411B0CA27100C21A08 /* APCDStackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5D223D1B0CA23300C21A08 /* APCDStackTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,10 +26,10 @@
 /* Begin PBXFileReference section */
 		0E053D871B0C6BEA00183427 /* APCDStack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APCDStack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E053D921B0C6BEA00183427 /* APCDStackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APCDStackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0E053D981B0C6BEA00183427 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0E053D991B0C6BEA00183427 /* APCDStackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APCDStackTests.swift; sourceTree = "<group>"; };
 		0E5D22371B0C9F6C00C21A08 /* APCDStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APCDStack.swift; sourceTree = "<group>"; };
 		0E5D223A1B0C9F9100C21A08 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0E5D223D1B0CA23300C21A08 /* APCDStackTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APCDStackTests.swift; sourceTree = "<group>"; };
+		0E5D223E1B0CA23300C21A08 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,8 +55,8 @@
 			isa = PBXGroup;
 			children = (
 				0E5D223A1B0C9F9100C21A08 /* Info.plist */,
+				0E5D223C1B0CA23300C21A08 /* Tests */,
 				0E5D22361B0C9F6C00C21A08 /* Sources */,
-				0E053D961B0C6BEA00183427 /* APCDStackTests */,
 				0E053D881B0C6BEA00183427 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -69,29 +70,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0E053D961B0C6BEA00183427 /* APCDStackTests */ = {
-			isa = PBXGroup;
-			children = (
-				0E053D991B0C6BEA00183427 /* APCDStackTests.swift */,
-				0E053D971B0C6BEA00183427 /* Supporting Files */,
-			);
-			path = APCDStackTests;
-			sourceTree = "<group>";
-		};
-		0E053D971B0C6BEA00183427 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				0E053D981B0C6BEA00183427 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		0E5D22361B0C9F6C00C21A08 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				0E5D22371B0C9F6C00C21A08 /* APCDStack.swift */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		0E5D223C1B0CA23300C21A08 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				0E5D223E1B0CA23300C21A08 /* Info.plist */,
+				0E5D223D1B0CA23300C21A08 /* APCDStackTests.swift */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,6 +176,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E5D22401B0CA23300C21A08 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,7 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E053D9A1B0C6BEA00183427 /* APCDStackTests.swift in Sources */,
+				0E5D22411B0CA27100C21A08 /* APCDStackTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,7 +350,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = APCDStackTests/Info.plist;
+				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -369,7 +363,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = APCDStackTests/Info.plist;
+				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
