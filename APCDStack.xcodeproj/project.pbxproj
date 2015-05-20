@@ -55,8 +55,8 @@
 			isa = PBXGroup;
 			children = (
 				0E5D223A1B0C9F9100C21A08 /* Info.plist */,
-				0E5D223C1B0CA23300C21A08 /* Tests */,
 				0E5D22361B0C9F6C00C21A08 /* Sources */,
+				0E5D223C1B0CA23300C21A08 /* Tests */,
 				0E053D881B0C6BEA00183427 /* Products */,
 			);
 			sourceTree = "<group>";
