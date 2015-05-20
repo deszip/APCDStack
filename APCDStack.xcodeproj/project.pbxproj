@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0E053D8D1B0C6BEA00183427 /* APCDStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E053D8C1B0C6BEA00183427 /* APCDStack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0E053D931B0C6BEA00183427 /* APCDStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E053D871B0C6BEA00183427 /* APCDStack.framework */; };
 		0E053D9A1B0C6BEA00183427 /* APCDStackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E053D991B0C6BEA00183427 /* APCDStackTests.swift */; };
+		0E053DA61B0C6C6100183427 /* APCDStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E053DA51B0C6C6100183427 /* APCDStack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,10 +25,10 @@
 /* Begin PBXFileReference section */
 		0E053D871B0C6BEA00183427 /* APCDStack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APCDStack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E053D8B1B0C6BEA00183427 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0E053D8C1B0C6BEA00183427 /* APCDStack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APCDStack.h; sourceTree = "<group>"; };
 		0E053D921B0C6BEA00183427 /* APCDStackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APCDStackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E053D981B0C6BEA00183427 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0E053D991B0C6BEA00183427 /* APCDStackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APCDStackTests.swift; sourceTree = "<group>"; };
+		0E053DA51B0C6C6100183427 /* APCDStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APCDStack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +71,8 @@
 		0E053D891B0C6BEA00183427 /* APCDStack */ = {
 			isa = PBXGroup;
 			children = (
-				0E053D8C1B0C6BEA00183427 /* APCDStack.h */,
+				0E053DA31B0C6C0300183427 /* Sources */,
+				0E053DA41B0C6C4300183427 /* Tests */,
 				0E053D8A1B0C6BEA00183427 /* Supporting Files */,
 			);
 			path = APCDStack;
@@ -102,6 +103,21 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		0E053DA31B0C6C0300183427 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				0E053DA51B0C6C6100183427 /* APCDStack.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		0E053DA41B0C6C4300183427 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -109,7 +125,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E053D8D1B0C6BEA00183427 /* APCDStack.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,6 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E053DA61B0C6C6100183427 /* APCDStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,6 +339,7 @@
 		0E053D9E1B0C6BEA00183427 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -332,12 +349,14 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		0E053D9F1B0C6BEA00183427 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
