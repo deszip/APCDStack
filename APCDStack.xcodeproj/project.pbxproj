@@ -11,6 +11,7 @@
 		0E5D22381B0C9F6C00C21A08 /* APCDStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5D22371B0C9F6C00C21A08 /* APCDStack.swift */; };
 		0E5D22401B0CA23300C21A08 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E5D223E1B0CA23300C21A08 /* Info.plist */; };
 		0E5D22411B0CA27100C21A08 /* APCDStackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5D223D1B0CA23300C21A08 /* APCDStackTests.swift */; };
+		0E7058741B0E520900394669 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0E7058731B0E520900394669 /* LICENSE.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +31,7 @@
 		0E5D223A1B0C9F9100C21A08 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0E5D223D1B0CA23300C21A08 /* APCDStackTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APCDStackTests.swift; sourceTree = "<group>"; };
 		0E5D223E1B0CA23300C21A08 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0E7058731B0E520900394669 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 		0E053D7D1B0C6BEA00183427 = {
 			isa = PBXGroup;
 			children = (
+				0E7058731B0E520900394669 /* LICENSE.txt */,
 				0E5D223A1B0C9F9100C21A08 /* Info.plist */,
 				0E5D22361B0C9F6C00C21A08 /* Sources */,
 				0E5D223C1B0CA23300C21A08 /* Tests */,
@@ -176,6 +179,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E7058741B0E520900394669 /* LICENSE.txt in Resources */,
 				0E5D22401B0CA23300C21A08 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
