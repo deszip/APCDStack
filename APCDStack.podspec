@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'APCDStack'
-  s.version = '0.3.0'
+  s.version = '0.4.0'
   s.license = 'MIT'
   s.summary = 'CoreData stack done right.'
   s.homepage = 'https://github.com/Deszip/APCDStack'
