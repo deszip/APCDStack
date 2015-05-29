@@ -135,7 +135,7 @@ public class APCDStack {
     Saves main and writer contexts
     */
     public func performSave() {
-        mainMOC.performBlock { () -> Void in
+        mainMOC.performBlockAndWait({ () -> Void in
             var saveError: NSError?
             if !self.mainMOC.save(&saveError) {
                 println("APCDStack: error saving main context: \(saveError)")
@@ -147,7 +147,7 @@ public class APCDStack {
                     println("APCDStack: error saving writer context: \(saveError)")
                 }
             })
-        }
+        })
     }
     
     //MARK: Tools
