@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'APCDStack'
-  s.version = '0.5.0'
+  s.version = '0.5.1'
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.summary = 'CoreData stack done right.'
   s.homepage = 'https://github.com/Deszip/APCDStack'
@@ -9,7 +9,6 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.9'
-  #s.watchos.deployment_target = '2.0'
 
   s.source_files = 'Sources/*.swift'
 
