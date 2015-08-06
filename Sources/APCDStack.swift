@@ -29,7 +29,7 @@ public class APCDStack {
         public let appGroupID: String
         public let bundleID: String
         
-        init(storeName: String, storeType: String, appGroupID: String, bundleID: String) {
+        public init(storeName: String, storeType: String, appGroupID: String, bundleID: String) {
             self.storeName = storeName
             self.storeType = storeType
             self.appGroupID = appGroupID
@@ -78,7 +78,13 @@ public class APCDStack {
         
         if let _ = self._mom {
             let psc = NSPersistentStoreCoordinator(managedObjectModel: self._mom!)
-            let psUrl = self.storeURL().URLByAppendingPathComponent("\(self.configuration.storeName).sqlite")
+            
+            var storeName = self.configuration.storeName
+            if count(storeName) == 0 {
+                storeName = self.applicationName()
+            }
+            
+            let psUrl = self.storeURL().URLByAppendingPathComponent("\(storeName).sqlite")
             var error: NSError?
             if let _ = psc.addPersistentStoreWithType(self.configuration.storeType, configuration: nil, URL: psUrl, options: storeOptions, error: &error) {
                 return psc
