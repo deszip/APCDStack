@@ -1,4 +1,6 @@
-# APCDStack
+# APCDStack 
+
+[![Build Status](https://travis-ci.org/deszip/APCDStack.svg?branch=master)](https://travis-ci.org/deszip/APCDStack)
 
 ## Installation
 
