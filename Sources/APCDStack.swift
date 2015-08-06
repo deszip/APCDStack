@@ -203,6 +203,10 @@ public class APCDStack {
     }
     
     private func applicationName() -> String {
-        return NSBundle.mainBundle().objectForInfoDictionaryKey(kAppBundleNameKey) as! String
+        if let appName = self.workingBundle().objectForInfoDictionaryKey(kAppBundleNameKey) as? String {
+            return appName
+        }
+        
+        return NSBundle(forClass: object_getClass(self)).objectForInfoDictionaryKey(kAppBundleNameKey) as! String
     }
 }
