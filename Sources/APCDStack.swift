@@ -180,13 +180,13 @@ public class APCDStack {
             let urls = NSFileManager.defaultManager().URLsForDirectory(.LibraryDirectory, inDomains:.UserDomainMask)
             return urls[0] as! NSURL
             
-            #else
+        #else
             
             let urls = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
             let supportUrl = urls[0] as! NSURL
             let appUrl = supportUrl.URLByAppendingPathComponent(self.applicationName(), isDirectory: true)
             if !NSFileManager.defaultManager().fileExistsAtPath(appUrl.path!) {
-            NSFileManager.defaultManager().createDirectoryAtURL(appUrl, withIntermediateDirectories: true, attributes: nil, error: nil)
+                NSFileManager.defaultManager().createDirectoryAtURL(appUrl, withIntermediateDirectories: true, attributes: nil, error: nil)
             }
             
             return appUrl
