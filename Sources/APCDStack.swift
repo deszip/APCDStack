@@ -72,7 +72,7 @@ public class APCDStack {
         return nil
     }()
     
-    private var _psc: NSPersistentStoreCoordinator? {
+    private lazy var _psc: NSPersistentStoreCoordinator? = {
         let storeOptions = [NSMigratePersistentStoresAutomaticallyOption : true,
                             NSInferMappingModelAutomaticallyOption : true]
         
@@ -88,8 +88,8 @@ public class APCDStack {
             
             do {
                 try psc.addPersistentStoreWithType(self.configuration.storeType, configuration: nil, URL: psUrl, options: storeOptions)
-            } catch let error as NSError {
-                NSException.raise("Failed to add store to coordinator:", format: "%@", arguments: getVaList([error]))
+            } catch let error {
+                NSException.raise("Failed to add store to coordinator:", format: "%@", arguments: getVaList(["\(error)"]))
             }
         } else {
             NSException.raise("Can't find model!", format: "", arguments: getVaList([""]))
@@ -97,7 +97,7 @@ public class APCDStack {
         
         return nil
         
-    }
+    }()
     
     //MARK: Contexts
     
