@@ -145,6 +145,7 @@
 		0E053D7E1B0C6BEA00183427 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = Alterplay;
 				TargetAttributes = {
