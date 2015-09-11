@@ -88,6 +88,7 @@ public class APCDStack {
             
             do {
                 try psc.addPersistentStoreWithType(self.configuration.storeType, configuration: nil, URL: psUrl, options: storeOptions)
+                return psc
             } catch let error {
                 NSException.raise("Failed to add store to coordinator:", format: "%@", arguments: getVaList(["\(error)"]))
             }
