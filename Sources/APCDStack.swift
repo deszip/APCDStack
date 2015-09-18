@@ -151,7 +151,7 @@ public class APCDStack {
                 try strongSelf.mainMOC.save()
                 strongSelf.writerMOC.performBlock {
                     do {
-                        try strongSelf.mainMOC.save()
+                        try strongSelf.writerMOC.save()
                     } catch let saveError {
                         print("APCDStack: error saving writer context: \(saveError)")
                     }
