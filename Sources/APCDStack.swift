@@ -80,16 +80,17 @@ public class APCDStack {
             let psc = NSPersistentStoreCoordinator(managedObjectModel: self._mom!)
             
             var storeName = self.configuration.storeName
-            if count(storeName) == 0 {
+            if storeName.characters.isEmpty {
                 storeName = self.applicationName()
             }
             
             let psUrl = self.storeURL().URLByAppendingPathComponent("\(storeName).sqlite")
-            var error: NSError?
-            if let _ = psc.addPersistentStoreWithType(self.configuration.storeType, configuration: nil, URL: psUrl, options: storeOptions, error: &error) {
+           
+            do {
+                try psc.addPersistentStoreWithType(self.configuration.storeType, configuration: nil, URL: psUrl, options: storeOptions)
                 return psc
-            } else {
-                NSException.raise("Failed to add store to coordinator:", format: "%@", arguments: getVaList([error!]))
+            } catch let error as NSError {
+                NSException.raise("Failed to add store to coordinator:", format: "%@", arguments: getVaList([error]))
             }
         } else {
             NSException.raise("Can't find model!", format: "", arguments: getVaList([""]))
@@ -142,15 +143,17 @@ public class APCDStack {
     */
     public func performSave() {
         mainMOC.performBlockAndWait({ () -> Void in
-            var saveError: NSError?
-            if !self.mainMOC.save(&saveError) {
-                println("APCDStack: error saving main context: \(saveError)")
+            do {
+                try self.mainMOC.save()
+            } catch let saveError as NSError {
+                print("APCDStack: error saving main context: \(saveError)")
             }
             
             self.writerMOC.performBlock({ () -> Void in
-                var saveError: NSError?
-                if !self.writerMOC.save(&saveError) {
-                    println("APCDStack: error saving writer context: \(saveError)")
+                do {
+                    try self.writerMOC.save()
+                } catch let saveError as NSError {
+                    print("APCDStack: error saving writer context: \(saveError)")
                 }
             })
         })
@@ -178,7 +181,7 @@ public class APCDStack {
             }
             
             let urls = NSFileManager.defaultManager().URLsForDirectory(.LibraryDirectory, inDomains:.UserDomainMask)
-            return urls[0] as! NSURL
+            return urls[0]
             
         #else
             
