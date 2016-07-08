@@ -180,10 +180,10 @@ public class APCDStack {
         #if os(iOS)
             
             if self.configuration.appGroupID.lengthOfBytes(using: String.Encoding.utf8) > 0 {
-                return FileManager.default().containerURLForSecurityApplicationGroupIdentifier(self.configuration.appGroupID)!
+                return FileManager.default.containerURLForSecurityApplicationGroupIdentifier(self.configuration.appGroupID)!
             }
             
-            let urls = FileManager.default().urlsForDirectory(.libraryDirectory, inDomains:.userDomainMask)
+            let urls = FileManager.default.urlsForDirectory(.libraryDirectory, inDomains:.userDomainMask)
             return urls[0]
             
         #else
@@ -205,7 +205,7 @@ public class APCDStack {
             return bundle
         }
         
-        return Bundle.main()
+        return Bundle.main
     }
     
     private func applicationName() -> String {
