@@ -166,9 +166,9 @@ public class APCDStack {
     
     private func modelURL() -> URL? {
         let currentBundle = self.workingBundle()
-        if let modelPath = currentBundle.pathForResource(self.configuration.storeName, ofType:kModelMOMDExtension) {
+        if let modelPath = currentBundle.path(forResource: self.configuration.storeName, ofType:kModelMOMDExtension) {
             return URL(fileURLWithPath: modelPath)
-        } else if let modelPath = currentBundle.pathForResource(self.configuration.storeName, ofType:kModelMOMExtension) {
+        } else if let modelPath = currentBundle.path(forResource: self.configuration.storeName, ofType:kModelMOMExtension) {
             return URL(fileURLWithPath: modelPath)
         }
         
@@ -180,10 +180,10 @@ public class APCDStack {
         #if os(iOS)
             
             if self.configuration.appGroupID.lengthOfBytes(using: String.Encoding.utf8) > 0 {
-                return FileManager.default.containerURLForSecurityApplicationGroupIdentifier(self.configuration.appGroupID)!
+                return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: self.configuration.appGroupID)!
             }
             
-            let urls = FileManager.default.urlsForDirectory(.libraryDirectory, inDomains:.userDomainMask)
+            let urls = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)
             return urls[0]
             
         #else
@@ -209,10 +209,10 @@ public class APCDStack {
     }
     
     private func applicationName() -> String {
-        if let appName = self.workingBundle().objectForInfoDictionaryKey(kAppBundleNameKey) as? String {
+        if let appName = self.workingBundle().object(forInfoDictionaryKey: kAppBundleNameKey) as? String {
             return appName
         }
         
-        return Bundle(for: object_getClass(self)).objectForInfoDictionaryKey(kAppBundleNameKey) as! String
+        return Bundle(for: object_getClass(self)).object(forInfoDictionaryKey: kAppBundleNameKey) as! String
     }
 }
