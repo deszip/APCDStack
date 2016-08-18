@@ -84,16 +84,16 @@ public class APCDStack {
                 storeName = self.applicationName()
             }
             
-            let psUrl = try! self.storeURL().appendingPathComponent("\(storeName).sqlite")
+            let psUrl = self.storeURL().appendingPathComponent("\(storeName).sqlite")
             
             do {
                 try psc.addPersistentStore(ofType: self.configuration.storeType, configurationName: nil, at: psUrl, options: storeOptions)
                 return psc
             } catch let error {
-                NSException.raise("Failed to add store to coordinator:" as NSExceptionName, format: "%@", arguments: getVaList(["\(error)"]))
+                NSException.raise(NSExceptionName("Failed to add store to coordinator:"), format: "%@", arguments: getVaList(["\(error)"]))
             }
         } else {
-            NSException.raise("Can't find model!" as NSExceptionName, format: "", arguments: getVaList([""]))
+            NSException.raise(NSExceptionName("Can't find model!"), format: "", arguments: getVaList([""]))
         }
         
         return nil
