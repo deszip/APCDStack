@@ -213,6 +213,6 @@ public class APCDStack {
             return appName
         }
         
-        return Bundle(for: object_getClass(self)).object(forInfoDictionaryKey: kAppBundleNameKey) as! String
+        return Bundle(for: object_getClass(self)!).object(forInfoDictionaryKey: kAppBundleNameKey) as! String
     }
 }
