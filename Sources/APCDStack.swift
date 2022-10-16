@@ -60,50 +60,49 @@ public class APCDStack {
     
     private lazy var _mom: NSManagedObjectModel? = {
         if let modelUrl = self.modelURL() {
-            if let mom = NSManagedObjectModel(contentsOfURL: modelUrl) {
+            if let mom = NSManagedObjectModel(contentsOf: modelUrl) {
                 return mom
             }
         }
         
-        if let mom = NSManagedObjectModel.mergedModelFromBundles([self.workingBundle()]) {
+        if let mom = NSManagedObjectModel.mergedModel(from: [self.workingBundle()]) {
             return mom
         }
         
         return nil
     }()
     
-    private lazy var _psc: NSPersistentStoreCoordinator? = {
+    private var _psc: NSPersistentStoreCoordinator? {
         let storeOptions = [NSMigratePersistentStoresAutomaticallyOption : true,
-                            NSInferMappingModelAutomaticallyOption : true]
+                                  NSInferMappingModelAutomaticallyOption : true]
         
         if let _ = self._mom {
             let psc = NSPersistentStoreCoordinator(managedObjectModel: self._mom!)
             
             var storeName = self.configuration.storeName
-            if count(storeName) == 0 {
+            if storeName.count == 0 {
                 storeName = self.applicationName()
             }
             
-            let psUrl = self.storeURL().URLByAppendingPathComponent("\(storeName).sqlite")
-            var error: NSError?
-            if let _ = psc.addPersistentStoreWithType(self.configuration.storeType, configuration: nil, URL: psUrl, options: storeOptions, error: &error) {
+            let psUrl = self.storeURL().appendingPathComponent("\(storeName).sqlite")
+            do {
+                try psc.addPersistentStore(ofType: self.configuration.storeType, configurationName: nil, at: psUrl, options: storeOptions)
                 return psc
-            } else {
-                NSException.raise("Failed to add store to coordinator:", format: "%@", arguments: getVaList([error!]))
+            } catch {
+//                NSException.raise(NSExceptionName.genericException, format: "Failed to add store to coordinator: %@", arguments: getVaList([error]))
             }
         } else {
-            NSException.raise("Can't find model!", format: "", arguments: getVaList([""]))
+            NSException.raise(NSExceptionName.genericException, format: "Can't find model", arguments: getVaList([""]))
         }
         
         return nil
-        
-        }()
+    }
     
     //MARK: Contexts
     
     /// Context attached to store, used for writing to store only
     public private(set) lazy var writerMOC: NSManagedObjectContext = {
-        let writerMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        let writerMOC = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         writerMOC.persistentStoreCoordinator = self._psc
         
         return writerMOC
@@ -111,8 +110,8 @@ public class APCDStack {
     
     /// Main thread context for UI interactions
     public private(set) lazy var mainMOC: NSManagedObjectContext = {
-        let mainMOC = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        mainMOC.parentContext = self.writerMOC
+        let mainMOC = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        mainMOC.parent = self.writerMOC
         
         return mainMOC
         }()
@@ -131,8 +130,8 @@ public class APCDStack {
     :returns: spawned context
     */
     public func spawnBackgroundContext() -> NSManagedObjectContext {
-        let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        context.parentContext = mainMOC
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        context.parent = mainMOC
         
         return context
     }
@@ -141,16 +140,18 @@ public class APCDStack {
     Saves main and writer contexts
     */
     public func performSave() {
-        mainMOC.performBlockAndWait({ () -> Void in
-            var saveError: NSError?
-            if !self.mainMOC.save(&saveError) {
-                println("APCDStack: error saving main context: \(saveError)")
+        mainMOC.performAndWait({ () -> Void in
+            do {
+                try self.mainMOC.save()
+            } catch {
+                print("APCDStack: error saving main context: \(error)")
             }
             
-            self.writerMOC.performBlock({ () -> Void in
-                var saveError: NSError?
-                if !self.writerMOC.save(&saveError) {
-                    println("APCDStack: error saving writer context: \(saveError)")
+            self.writerMOC.perform({ () -> Void in
+                do {
+                    try self.writerMOC.save()
+                } catch {
+                    print("APCDStack: error saving writer context: \(error)")
                 }
             })
         })
@@ -158,32 +159,32 @@ public class APCDStack {
     
     //MARK: Tools
     
-    private func modelURL() -> NSURL? {
+    private func modelURL() -> URL? {
         let currentBundle = self.workingBundle()
-        if let modelPath = currentBundle.pathForResource(self.configuration.storeName, ofType:kModelMOMDExtension) {
-            return NSURL(fileURLWithPath: modelPath)
-        } else if let modelPath = currentBundle.pathForResource(self.configuration.storeName, ofType:kModelMOMExtension) {
-            return NSURL(fileURLWithPath: modelPath)
+        if let modelPath = currentBundle.path(forResource: self.configuration.storeName, ofType:kModelMOMDExtension) {
+            return URL(fileURLWithPath: modelPath)
+        } else if let modelPath = currentBundle.path(forResource: self.configuration.storeName, ofType:kModelMOMExtension) {
+            return URL(fileURLWithPath: modelPath)
         }
         
         return nil
     }
     
-    private func storeURL() -> NSURL {
+    private func storeURL() -> URL {
         
         #if os(iOS)
             
-            if self.configuration.appGroupID.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) > 0 {
-                return NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier(self.configuration.appGroupID)!
+            if self.configuration.appGroupID.lengthOfBytes(using: .utf8) > 0 {
+                return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: self.configuration.appGroupID)!
             }
-            
-            let urls = NSFileManager.defaultManager().URLsForDirectory(.LibraryDirectory, inDomains:.UserDomainMask)
-            return urls[0] as! NSURL
+                
+            let urls = FileManager.default.urls(for: .libraryDirectory, in:.userDomainMask)
+            return urls[0]
             
         #else
             
-            let urls = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
-            let supportUrl = urls[0] as! NSURL
+            let urls = FileManager.default.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+            let supportUrl = urls[0]
             let appUrl = supportUrl.URLByAppendingPathComponent(self.applicationName(), isDirectory: true)
             if !NSFileManager.defaultManager().fileExistsAtPath(appUrl.path!) {
                 NSFileManager.defaultManager().createDirectoryAtURL(appUrl, withIntermediateDirectories: true, attributes: nil, error: nil)
@@ -194,19 +195,19 @@ public class APCDStack {
         #endif
     }
     
-    private func workingBundle() -> NSBundle {
-        if let bundle = NSBundle(identifier: self.configuration.bundleID) {
+    private func workingBundle() -> Bundle {
+        if let bundle = Bundle(identifier: self.configuration.bundleID) {
             return bundle
         }
         
-        return NSBundle.mainBundle()
+        return Bundle.main
     }
     
     private func applicationName() -> String {
-        if let appName = self.workingBundle().objectForInfoDictionaryKey(kAppBundleNameKey) as? String {
+        if let appName = self.workingBundle().object(forInfoDictionaryKey: kAppBundleNameKey) as? String {
             return appName
         }
         
-        return NSBundle(forClass: object_getClass(self)).objectForInfoDictionaryKey(kAppBundleNameKey) as! String
+        return Bundle(for: Self.self).object(forInfoDictionaryKey: kAppBundleNameKey) as! String
     }
 }
